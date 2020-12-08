@@ -64,8 +64,11 @@ def main():
     print(spdata.shape[0], spdata.shape[1])
     spdata = spdata[spdata['year'] >= 1980]
     print(spdata.shape[0], spdata.shape[1])
+    print(spdata["popularity"].describe())
+    spdata["popularity"] = [1 if i >= 57 else 0 for i in spdata.popularity]
     y = spdata['popularity']
     xFeat = spdata.drop(['popularity'], axis=1)
+    print(y.value_counts())
 
     pearson_matrix = spdata.corr(method='pearson')
     plt.title('Correlation Map')
@@ -83,8 +86,8 @@ def main():
 
     xTrain, xTest, yTrain, yTest = train_test_split(xFeat, y, test_size=0.33)
 
-    xNewTrain = xTrain.drop(['acousticness', 'loudness', 'duration_ms', 'energy', 'key', 'liveness', 'mode', 'speechiness', 'tempo', 'valence'], axis=1)
-    xNewTest = xTest.drop(['acousticness', 'loudness', 'duration_ms', 'energy', 'key', 'liveness', 'mode', 'speechiness', 'tempo', 'valence'], axis=1)
+    xNewTrain = xTrain.drop(['acousticness', 'loudness', 'duration_ms', 'energy', 'key', 'speechiness'], axis=1)
+    xNewTest = xTest.drop(['acousticness', 'loudness', 'duration_ms', 'energy', 'key', 'speechiness'], axis=1)
     # preprocess the data
     xTrainTr, xTestTr = preprocess_data(xNewTrain, xNewTest)
     # save it to csv
